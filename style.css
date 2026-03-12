@@ -1,0 +1,235 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    margin: 0;
+    padding: 2rem 1rem;
+    background-color: #fafafa;
+    color: #111;
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #000;
+        color: #f1f1f1;
+    }
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+header {
+    margin-bottom: 3rem;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+    header { border-bottom-color: #333; }
+}
+
+h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    letter-spacing: -0.05em;
+}
+
+h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 1rem 0;
+}
+
+/* Form Styles */
+#add-tracker-form {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    align-items: flex-end;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.form-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #666;
+}
+
+@media (prefers-color-scheme: dark) {
+    .form-group label { color: #aaa; }
+}
+
+input, select {
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    background: #fff;
+    color: #111;
+    font-family: inherit;
+    transition: border-color 0.2s;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: #111;
+}
+
+@media (prefers-color-scheme: dark) {
+    input, select {
+        background: #111;
+        border-color: #444;
+        color: #fff;
+    }
+    input:focus, select:focus { border-color: #fff; }
+}
+
+button {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    background: #111;
+    color: #fff;
+    border: 2px solid #111;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+button:hover {
+    background: transparent;
+    color: #111;
+}
+
+@media (prefers-color-scheme: dark) {
+    button {
+        background: #f1f1f1;
+        color: #000;
+        border-color: #f1f1f1;
+    }
+    button:hover {
+        background: transparent;
+        color: #f1f1f1;
+    }
+}
+
+/* Controls / Sorting */
+.controls {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.5rem;
+}
+
+.sort-group {
+    flex: 0 1 auto;
+    min-width: 200px;
+}
+
+/* Grid Layout for Trackers */
+#trackers {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.tracker {
+    position: relative;
+    padding: 1.5rem;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+}
+
+@media (prefers-color-scheme: dark) {
+    .tracker {
+        background: #0a0a0a;
+        border-color: #333;
+    }
+}
+
+.tracker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.tracker-header h2 {
+    margin: 0;
+}
+
+.delete-btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    background: transparent;
+    color: #d32f2f;
+    border: 1px solid #d32f2f;
+    border-radius: 3px;
+    opacity: 0.6;
+}
+
+.delete-btn:hover {
+    background: #d32f2f;
+    color: #fff;
+    opacity: 1;
+}
+
+@media (prefers-color-scheme: dark) {
+    .delete-btn {
+        color: #ff6b6b;
+        border-color: #ff6b6b;
+    }
+    .delete-btn:hover {
+        background: #ff6b6b;
+        color: #000;
+    }
+}
+
+.result {
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.4;
+    margin: 0 0 1.5rem 0;
+    flex-grow: 1;
+}
+
+.time-val {
+    font-weight: 700;
+}
+
+.date-info {
+    font-size: 0.85rem;
+    color: #666;
+    margin: 0;
+    border-top: 1px solid #eee;
+    padding-top: 1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+    .date-info {
+        color: #999;
+        border-top-color: #222;
+    }
+}
+
+@media (max-width: 600px) {
+    #add-tracker-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    #trackers {
+        grid-template-columns: 1fr;
+    }
+}
