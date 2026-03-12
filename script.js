@@ -37,6 +37,7 @@ function getTimeDifference(date1, date2) {
 
 let trackers = JSON.parse(localStorage.getItem('trackers')) || [];
 let currentSort = localStorage.getItem('sortPref') || 'newest';
+let editingIndex = null;
 
 document.getElementById('sort-trackers').value = currentSort;
 
@@ -70,13 +71,18 @@ function renderTrackers() {
         const trackerDiv = document.createElement('div');
         trackerDiv.className = 'tracker';
         
-        let timeParts = [];
-        if (years > 0) timeParts.push(`<span class="time-val">${years}</span> year${years > 1 ? 's' : ''}`);
-        if (months > 0) timeParts.push(`<span class="time-val">${months}</span> month${months > 1 ? 's' : ''}`);
-        timeParts.push(`<span class="time-val">${days}</span> day${days !== 1 ? 's' : ''}`);
-        timeParts.push(`<span class="time-val">${hours}</span> hour${hours !== 1 ? 's' : ''}`);
-        timeParts.push(`<span class="time-val">${minutes}</span> min${minutes !== 1 ? 's' : ''}`);
-        timeParts.push(`<span class="time-val">${seconds}</span> sec${seconds !== 1 ? 's' : ''}`);
+        const parts = [
+            { v: years, l: 'year' },
+            { v: months, l: 'month' },
+            { v: days, l: 'day' },
+            { v: hours, l: 'hour' },
+            { v: minutes, l: 'min' },
+            { v: seconds, l: 'sec' }
+        ];
+
+        const timeParts = parts
+            .filter(p => p.v > 0 || ['day', 'hour', 'min', 'sec'].includes(p.l))
+            .map(p => `<span class="time-val">${p.v}</span> ${p.l}${p.v !== 1 ? 's' : ''}`);
 
         let resultText = timeParts.join(', ');
         if (isFuture) {
@@ -87,16 +93,56 @@ function renderTrackers() {
 
         const originalIndex = trackers.indexOf(tracker);
 
-        trackerDiv.innerHTML = `
-            <div class="tracker-header">
-                <h2>${tracker.label}</h2>
-                <button class="delete-btn" onclick="deleteTracker(${originalIndex})" title="Remove tracker">Delete</button>
-            </div>
-            <p class="result">${resultText}</p>
-            <p class="date-info">${isFuture ? 'Target' : 'Started'}: ${tracker.date}</p>
-        `;
+        if (editingIndex === originalIndex) {
+            trackerDiv.innerHTML = `
+                <div class="tracker-header">
+                    <input type="text" class="edit-label" id="edit-label-${originalIndex}" value="${tracker.label}">
+                    <div class="tracker-actions">
+                        <button class="action-btn" onclick="saveEdit(${originalIndex})" title="Save changes">Save</button>
+                        <button class="action-btn" onclick="cancelEdit()" title="Cancel edit">Cancel</button>
+                    </div>
+                </div>
+                <input type="date" class="edit-date" id="edit-date-${originalIndex}" value="${tracker.date}">
+            `;
+        } else {
+            trackerDiv.innerHTML = `
+                <div class="tracker-header">
+                    <h2>${tracker.label}</h2>
+                    <div class="tracker-actions">
+                        <button class="action-btn" onclick="startEdit(${originalIndex})" title="Edit tracker">Edit</button>
+                        <button class="action-btn" onclick="deleteTracker(${originalIndex})" title="Remove tracker">Delete</button>
+                    </div>
+                </div>
+                <p class="result">${resultText}</p>
+                <p class="date-info">${isFuture ? 'Target' : 'Started'}: ${tracker.date}</p>
+            `;
+        }
+        
         container.appendChild(trackerDiv);
     });
+}
+
+function startEdit(index) {
+    editingIndex = index;
+    renderTrackers();
+}
+
+function cancelEdit() {
+    editingIndex = null;
+    renderTrackers();
+}
+
+function saveEdit(index) {
+    const newLabel = document.getElementById(`edit-label-${index}`).value;
+    const newDate = document.getElementById(`edit-date-${index}`).value;
+    
+    if (newLabel && newDate) {
+        trackers[index].label = newLabel;
+        trackers[index].date = newDate;
+        saveTrackers();
+        editingIndex = null;
+        renderTrackers();
+    }
 }
 
 function deleteTracker(index) {
@@ -128,8 +174,10 @@ document.getElementById('add-tracker-form').addEventListener('submit', (e) => {
     dateInput.value = '';
 });
 
-// Real-time update every second
-setInterval(renderTrackers, 1000);
+setInterval(() => {
+    if (editingIndex === null) {
+        renderTrackers();
+    }
+}, 1000);
 
-// Initial render
 renderTrackers();
