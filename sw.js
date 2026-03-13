@@ -1,11 +1,11 @@
-const CACHE_NAME = 'time-tracker-v2';
+const CACHE_NAME = 'time-tracker-v3';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './style.css',
   './script.js',
   './manifest.json',
-  './icon.svg'
+  './icon-512.png'
 ];
 
 self.addEventListener('install', (event) => {
