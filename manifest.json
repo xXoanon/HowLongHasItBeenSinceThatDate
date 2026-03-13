@@ -1,6 +1,6 @@
 {
-  "name": "How long has it been?",
-  "short_name": "How long has it been?",
+  "name": "How Long Has It Been?",
+  "short_name": "How Long?",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#fcfcfc",
