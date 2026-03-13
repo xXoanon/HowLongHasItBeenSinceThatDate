@@ -39,7 +39,11 @@ let trackers = JSON.parse(localStorage.getItem('trackers')) || [];
 let currentSort = localStorage.getItem('sortPref') || 'newest';
 let currentTheme = localStorage.getItem('themePref');
 if (!['light', 'dark', 'black'].includes(currentTheme)) {
-    currentTheme = 'light';
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        currentTheme = 'dark';
+    } else {
+        currentTheme = 'light';
+    }
 }
 const themes = ['light', 'dark', 'black'];
 let editingIndex = null;
