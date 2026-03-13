@@ -14,32 +14,40 @@
 
 <body>
     <main class="container">
-        <header>
-            <h1>How long has it been since that date?</h1>
+        <header class="top-bar">
+            <h1>How Long Has It Been?</h1>
+            <div class="top-bar-controls">
+                <button id="theme-btn" class="icon-btn" aria-label="Toggle theme" title="Toggle Theme">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor"></path>
+                    </svg>
+                </button>
+                <select id="sort-trackers" class="minimal-select" aria-label="Sort trackers">
+                    <option value="newest">Sort: Newest</option>
+                    <option value="oldest">Sort: Oldest</option>
+                    <option value="alphabetical">Sort: A-Z</option>
+                </select>
+                <button id="new-btn" class="btn-primary">New</button>
+            </div>
         </header>
 
-        <form id="add-tracker-form">
-            <div class="form-group">
-                <label for="label">What are we tracking?</label>
-                <input type="text" id="label" placeholder="e.g. Started my new job, My age, etc." required>
-            </div>
-            <div class="form-group">
-                <label for="start-date">Since when?</label>
-                <input type="date" id="start-date" required>
-            </div>
-            <button type="submit">Add Tracker</button>
-        </form>
-
-        <div class="controls">
-            <div class="form-group sort-group">
-                <label for="sort-trackers">Sort By</label>
-                <select id="sort-trackers">
-                    <option value="newest">Newest First</option>
-                    <option value="oldest">Oldest First</option>
-                    <option value="alphabetical">Alphabetical (A-Z)</option>
-                </select>
-            </div>
-        </div>
+        <dialog id="add-modal">
+            <form id="add-tracker-form">
+                <div class="form-group">
+                    <label for="label">What are we tracking?</label>
+                    <input type="text" id="label" placeholder="e.g. Started my new job, My age, etc." required>
+                </div>
+                <div class="form-group">
+                    <label for="start-date">Since when?</label>
+                    <input type="date" id="start-date" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" id="cancel-btn" class="action-btn">Cancel</button>
+                    <button type="submit" class="btn-primary">Add Tracker</button>
+                </div>
+            </form>
+        </dialog>
 
         <div id="trackers">
         </div>

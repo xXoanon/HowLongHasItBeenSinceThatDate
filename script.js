@@ -37,7 +37,35 @@ function getTimeDifference(date1, date2) {
 
 let trackers = JSON.parse(localStorage.getItem('trackers')) || [];
 let currentSort = localStorage.getItem('sortPref') || 'newest';
+let currentTheme = localStorage.getItem('themePref');
+if (!['light', 'dark', 'black'].includes(currentTheme)) {
+    currentTheme = 'light';
+}
+const themes = ['light', 'dark', 'black'];
 let editingIndex = null;
+
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    
+    let metaColor = '#fcfcfc';
+    if (theme === 'black') {
+        metaColor = '#000000';
+    } else if (theme === 'dark') {
+        metaColor = '#161618';
+    }
+    
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', metaColor);
+}
+
+applyTheme(currentTheme);
+
+document.getElementById('theme-btn').addEventListener('click', () => {
+    let currentIndex = themes.indexOf(currentTheme);
+    currentIndex = (currentIndex + 1) % themes.length;
+    currentTheme = themes[currentIndex];
+    localStorage.setItem('themePref', currentTheme);
+    applyTheme(currentTheme);
+});
 
 document.getElementById('sort-trackers').value = currentSort;
 
@@ -84,13 +112,6 @@ function renderTrackers() {
             .filter(p => p.v > 0 || ['day', 'hour', 'min', 'sec'].includes(p.l))
             .map(p => `<span class="time-val">${p.v}</span> ${p.l}${p.v !== 1 ? 's' : ''}`);
 
-        let resultText = timeParts.join(', ');
-        if (isFuture) {
-            resultText = `Time until: <br>${resultText}`;
-        } else {
-            resultText = `It has been: <br>${resultText}`;
-        }
-
         const originalIndex = trackers.indexOf(tracker);
 
         if (editingIndex === originalIndex) {
@@ -110,11 +131,12 @@ function renderTrackers() {
                     <h2>${tracker.label}</h2>
                     <div class="tracker-actions">
                         <button class="action-btn" onclick="startEdit(${originalIndex})" title="Edit tracker">Edit</button>
-                        <button class="action-btn" onclick="deleteTracker(${originalIndex})" title="Remove tracker">Delete</button>
+                        <button class="action-btn delete-btn" onclick="deleteTracker(${originalIndex})" title="Remove tracker">Delete</button>
                     </div>
                 </div>
-                <p class="result">${resultText}</p>
-                <p class="date-info">${isFuture ? 'Target' : 'Started'}: ${tracker.date}</p>
+                <div class="result-prefix">${isFuture ? 'Time until' : 'Time since'}</div>
+                <div class="result">${timeParts.join(', ')}</div>
+                <div class="date-info">${isFuture ? 'Target' : 'Started'}: ${tracker.date}</div>
             `;
         }
         
@@ -157,6 +179,16 @@ document.getElementById('sort-trackers').addEventListener('change', (e) => {
     renderTrackers();
 });
 
+document.getElementById('new-btn').addEventListener('click', () => {
+    document.getElementById('add-modal').showModal();
+});
+
+document.getElementById('cancel-btn').addEventListener('click', () => {
+    document.getElementById('add-modal').close();
+    document.getElementById('label').value = '';
+    document.getElementById('start-date').value = '';
+});
+
 document.getElementById('add-tracker-form').addEventListener('submit', (e) => {
     e.preventDefault();
     const labelInput = document.getElementById('label');
@@ -172,6 +204,7 @@ document.getElementById('add-tracker-form').addEventListener('submit', (e) => {
 
     labelInput.value = '';
     dateInput.value = '';
+    document.getElementById('add-modal').close();
 });
 
 setInterval(() => {
